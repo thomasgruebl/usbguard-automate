@@ -1,41 +1,57 @@
 #!/bin/bash
 
-sudo chmod 600 testrules.conf
-
+# read all IDs from detected USB devices into array using lsusb
 id=$(sudo lsusb | grep -oP '(?<=ID )[^ ]*')
 id=($id)
 
+# read all names into array
 name=$(sudo lsusb | sed 's/.*://' | cut -c6-)
 readarray -t name <<<"$name"
 
-for i in "${!id[@]}"
-do
-        if ! grep -q "allow id ${id[$i]}" /etc/usbguard/rules.conf; then
-                # matching both ID and name (doesn't always work)
-                # sudo echo "allow id ${id[$i]} serial '' name ${name[$i]} via port '1-2'" >> /etc/usbguard/rules.conf
-                # matching ID only
-                sudo echo "allow id ${id[$i]}" >> /etc/usbguard/rules.conf
-        fi
-done
+# detect any blocked devices using usbguard list-devices
+blocked=$(sudo usbguard list-devices | grep -o -P '.{0,4}block' | grep -o '^[^:]*')
+blocked=($blocked)
 
-echo "reject via-port '1-2'" >> testrules.conf
+# if "-tmp" flag is set this function will temporarily add the blocked device
+add_temporarily() {
+	if [ -z "$blocked" ]; then
+		echo "No blocked devices found."
+		exit
+	fi
 
-sudo systemctl restart usbguard 
+	for i in "${!blocked[@]}"
+	do
+		sudo usbguard allow-device ${blocked[$i]}
+		echo "Added device ${blocked[$i]} temporarily!"
+	done
+}
 
-sudo chmod 400 testrules.conf
+# if "-tmp" flag is not set, this function will permanently add the blocked device
+add_permanently() {
+	sudo chmod 600 /etc/usbguard/rules.conf
 
+	for i in "${!id[@]}"
+	do
+		if ! grep -q "allow id ${id[$i]}" /etc/usbguard/rules.conf; then
+			# matching both ID and name (doesn't always work)
+			# sudo echo "allow id ${id[$i]} serial '' name ${name[$i]}" >> /etc/usbguard/rules.conf
+			# matching ID only
+			sudo echo "allow id ${id[$i]}" >> /etc/usbguard/rules.conf
+			echo "Added device ${id[$i]} permanently on all ports!"
+		fi
+	done
 
+	sudo systemctl restart usbguard 
 
-#echo 'allow id $foo \n' >> /etc/usbguard/rules.conf
+	sudo chmod 400 /etc/usbguard/rules.conf
+}
 
-#"allow $id serial "" name $name via-port "1-2"
-#reject via-port "1-2""
+case "$1" in
+	-tmp)
+		add_temporarily
+		;;
 
-#maybe chmod /etc/usbguard/rules.conf in order to authenticate then chmod back
-
-#e.g.
-
-#chmod 777 /etc/usbguard/rules.conf
-
-#chmod 000 /etc/usbguard/rules.conf
-
+	*)
+		add_permanently
+		;;
+esac
