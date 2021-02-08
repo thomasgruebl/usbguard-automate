@@ -18,7 +18,7 @@ Usage: sudo ./automate_usbguard.sh [OPTIONS]
   Developed by Thomas Grübl -> (Github: thomasgruebl)
 
 Arguments:
-  [1]  -tmp  Add the tmp flag to add USB devices temporarily (default is permanently)
+  [1]  -tmp  Add the tmp flag to add USB devices temporarily (permanently is the default option)
 ```
 
 **Description**
