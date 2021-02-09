@@ -26,6 +26,8 @@ Arguments:
 
 usbguard is an open-source tool that allows users to generate USB device policies tailoired to the device ID, name, serial number and hashes.
 
+The default policy automatically blocks USB devices that are plugged in. Run the *automate_usbguard.sh* script in order to allow devices temporarily/permanently.
+
 **Background**
 ---
 
