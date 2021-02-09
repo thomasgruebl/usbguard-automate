@@ -15,7 +15,7 @@ blocked=($blocked)
 # if "-tmp" flag is set this function will temporarily add the blocked device
 add_temporarily() {
 	if [ -z "$blocked" ]; then
-		echo "No blocked devices found."
+		echo "No blocked USB devices found."
 		exit
 	fi
 
@@ -28,6 +28,8 @@ add_temporarily() {
 
 # if "-tmp" flag is not set, this function will permanently add the blocked device
 add_permanently() {
+
+	no_new_devices=true
 	sudo chmod 600 /etc/usbguard/rules.conf
 
 	for i in "${!id[@]}"
@@ -38,8 +40,13 @@ add_permanently() {
 			# matching ID only
 			sudo echo "allow id ${id[$i]}" >> /etc/usbguard/rules.conf
 			echo "Added device ${id[$i]} permanently on all ports!"
+			no_new_devices=false
 		fi
 	done
+
+	if [ "$no_new_devices" = true ]; then
+    		echo "No new USB devices found."
+	fi
 
 	sudo systemctl restart usbguard 
 
