@@ -1,5 +1,7 @@
 # usbguard-automate
 
+Automatically add new USB devices using usbguard.
+
 **Dependencies**
 ---
 
@@ -13,9 +15,6 @@ Install usbguard: sudo ./dependencies.sh
 
 ```
 Usage: sudo ./automate_usbguard.sh [OPTIONS]
-
-  Automate and secure USBguard.
-  Developed by Thomas Grübl -> (Github: thomasgruebl)
 
 Arguments:
   [1]  -tmp  Add the tmp flag to add USB devices temporarily until the USB device is removed again (permanently is the default option)
