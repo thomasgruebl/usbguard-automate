@@ -1,5 +1,7 @@
 # usbguard-automate
 
+![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/USBGuard/usbguard?style=plastic) ![GitHub last commit](https://img.shields.io/github/last-commit/thomasgruebl/usbguard-automate?style=plastic) ![GitHub](https://img.shields.io/github/license/thomasgruebl/usbguard-automate?style=plastic)
+
 Automatically add new USB devices using usbguard.
 
 **Dependencies**
