@@ -54,11 +54,15 @@ add_permanently() {
 }
 
 case "$1" in
-	-tmp)
+	-t)
 		add_temporarily
+		;;
+		
+	-p)
+		add_permanently
 		;;
 
 	*)
-		add_permanently
+		add_temporarily
 		;;
 esac
