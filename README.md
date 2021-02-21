@@ -19,7 +19,8 @@ Install usbguard: sudo ./dependencies.sh
 Usage: sudo ./automate_usbguard.sh [OPTIONS]
 
 Arguments:
-  [1]  -tmp  Add the tmp flag to add USB devices temporarily until the USB device is removed again (permanently is the default option)
+  [1]  -t  Add the tmp flag to add USB devices temporarily until the USB device is removed again (default option)
+  [2]  -p  Add the p flag to add USB devices permanently.
 ```
 
 **Description**
